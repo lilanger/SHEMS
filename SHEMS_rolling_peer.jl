@@ -1,13 +1,14 @@
 function SHEMS_rolling_peer(sh::SHEMS)
-    hp = HeatPump(1.0f0, 3.0f0)
-    fh = ThermalStorage(1.0f0, 10.0f0, 0.045f0, 30.0f0, 20.0f0, 22.0f0)
-    hw = ThermalStorage(1.0f0, 180.0f0, 0.035f0, 45.0f0, 20.0f0, 180.0f0)
-    b = Battery(0.95f0, 0.0f0, 13.5f0, 3.3f0, 0.0001f0)
-    pm = PeerMarket(0.99f0, 0.3f0, 0.1f0, 0.15f0)
-    m = Model_SHEMS(0.5f0, 0, 0)
+    # initialize technical setup
+    hp = HeatPump(1.0f0, 3.0f0);
+    fh = ThermalStorage(1.0f0, 10.0f0, 0.045f0, 30.0f0, 20.0f0, 22.0f0);
+    hw = ThermalStorage(1.0f0, 180.0f0, 0.035f0, 45.0f0, 20.0f0, 180.0f0);
+    b = Battery(0.95f0, 0.0f0, 13.5f0, 3.3f0, 0.0001f0);
+    pm = PeerMarket(0.99f0, 0.3f0, 0.1f0, 0.15f0);
+    m = Model_SHEMS(0.5f0, 0, 0);
 
-    # Data__________________________________________________________________________________________________________________________________________________________
-    df = CSV.read("data/200124_datafile_all_details.csv");
+    # Input data__________________________________________________________________________________________________________________________________________________________
+    df = CSV.read("data/200124_datafile_all_details_right_timestamp.csv");
     h_last = sh.h_start + sh.h_predict -1;                     # optimization horizon
 
     # all peers have the same demand
@@ -77,8 +78,8 @@ function SHEMS_rolling_peer(sh::SHEMS)
 
     #1:PV_DE, 2:B_DE, 3:GR_DE, 4:PV_B, 5:PV_GR, 6:PV_HP, 7:GR_HP, 8:B_HP, 9:HP_FH, 10:HP_HW, 11:PV_PM, 12:B_PM, 13:PM_DE, 14:PM_B, 15:PM_HP
     # Objective function: maximize profit, minimize comfort violations_____________________________________________________________________
-    @objective(model, Max, sum( sum( (pm.p_sell *X[h,5,n]) +pm.p_peer *(pm.eta *X[h,11,n] + pm.eta *b.eta *X[h,12,n]) -sum(pm.p_buy *pm.eta *X[h,i,n] for i=[3,7]) -sum(pm.p_peer *X[h,i,n] for i=[13,14,15])
-        -(1*(SOC_hw_plus[h,n] +SOC_hw_minus[h,n] +SOC_fh_plus[h,n] +SOC_fh_minus[h,n]))  for h=1:sh.h_predict) for n=1:sh.n_peers));
+    @objective(model, Max, sum( sum( (pm.p_sell *X[h,5,n]) +pm.p_peer *(pm.eta *X[h,11,n] +pm.eta *b.eta *X[h,12,n]) -sum(pm.p_buy *pm.eta *X[h,i,n] for i=[3,7])
+        -sum(pm.p_peer *X[h,i,n] for i=[13,14,15]) -(1*(SOC_hw_plus[h,n] +SOC_hw_minus[h,n] +SOC_fh_plus[h,n] +SOC_fh_minus[h,n]))  for h=1:sh.h_predict) for n=1:sh.n_peers));
 
     # Electricity demand, generation, market clearing___________________________________
     @constraints(model, begin
@@ -127,9 +128,10 @@ function SHEMS_rolling_peer(sh::SHEMS)
     end)
 
     JuMP.optimize!(model);
+
     # collect returns
     profits = zeros(sh.h_control, sh.n_peers);
-    results = Array{Any}(undef, (sh.h_control*sh.n_peers, 11+15+1));    # other variables + flows + n
+    results = Array{Any}(undef, (sh.h_control*sh.n_peers, 11+15+3));    # optimization variables + flows + month + day + hour
     for n=1:sh.n_peers
         for k=1:sh.h_control
             profits[k,n] = (pm.p_buy *JuMP.value.(X[k,5,n])) - (pm.p_sell *(JuMP.value.(X[k,3,n]) +JuMP.value.(X[k,7,n])));
@@ -141,7 +143,8 @@ function SHEMS_rolling_peer(sh::SHEMS)
             JuMP.value.(SOC_fh_plus[1:sh.h_control,n]), JuMP.value.(SOC_fh_minus[1:sh.h_control,n]),
             profits[:,n], cop_fh[1:sh.h_control], cop_hw[1:sh.h_control], (ones(sh.h_control)*n));
         results[((n-1)*sh.h_control)+1:(n*sh.h_control),12:26] = JuMP.value.(X[1:sh.h_control,:,n]);                       # flow variables
-        results[((n-1)*sh.h_control)+1:(n*sh.h_control),27:end] = df[sh.h_start:(sh.h_start + sh.h_control -1), 11];       # date/time stamp
+        results[((n-1)*sh.h_control)+1:(n*sh.h_control),27:end] .= df[sh.h_start:(sh.h_start + sh.h_control -1), 13:15];   # month + day + hour
     end
+
     return JuMP.value.(SOC_b[sh.h_control+1,:]), JuMP.value.(SOC_fh[sh.h_control+1,:]), JuMP.value.(SOC_hw[sh.h_control+1,:]), results
 end

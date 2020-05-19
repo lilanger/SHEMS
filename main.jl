@@ -1,5 +1,5 @@
 using JuMP, Gurobi, CSV, DataFrames;
-GUROBI_ENV = Gurobi.Env()
+GUROBI_ENV = Gurobi.Env() # Gurobi solver message only once
 
 struct HeatPump
     eta::Float64
