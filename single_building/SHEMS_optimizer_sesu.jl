@@ -6,7 +6,7 @@ function SHEMS_optimizer_sesu(sh, hp, fh, hw, b, m, bc_violations)
     c_water = 4.184;    #kJ/(kg*°C)
 
     # Input data__________________________________________________________________________________________________________________________________________________________
-    df = CSV.read("data/200124_datafile_all_details_right_timestamp.csv");
+    df = CSV.read("single_building/data/200124_datafile_all_details_right_timestamp.csv");
     h_last = sh.h_start + m.h_predict -1;                     # optimization horizon
 
     # all peers have the same demand

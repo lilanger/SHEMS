@@ -1,16 +1,21 @@
+include("main.jl")
+
 function yearly_SHEMS(h_start=1, h_end=8760, costfactor=1, objective=1, bc_violations=79, outputflag=true)
     # Initialize technical setup________________________________________________
     # set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag, costfactor)
     sh, hp, fh, hw, b, m = set_SHEMS_parameters(h_start, h_end, (h_end-h_start)+1, (h_end-h_start)+1, false, costfactor, outputflag);
     if objective==1
+        include("single_building/SHEMS_optimizer.jl")
         # minimize costs
         run= "Feedin+_battery+_mc";
         results  = SHEMS_optimizer(sh, hp, fh, hw, b, m);
     elseif objective==2
+        include("single_building/SHEMS_optimizer_seco.jl")
         # maximize self-consumption
         run= "Feedin+_battery+_seco";
         results  = SHEMS_optimizer_seco(sh, hp, fh, hw, b, m, bc_violations);
     elseif objective==3
+        include("single_building/SHEMS_optimizer_sesu.jl")
         # maximize self-sufficiency
         run= "Feedin+_battery+_sesu";
         results  = SHEMS_optimizer_sesu(sh, hp, fh, hw, b, m, bc_violations);
@@ -22,6 +27,7 @@ function yearly_SHEMS(h_start=1, h_end=8760, costfactor=1, objective=1, bc_viola
 end
 
 function roll_SHEMS(h_start, h_end, h_predict, h_control, costfactor, outputflag=false)
+    include("SHEMS_optimizer.jl")
     # Initialize technical setup__________________________________________________
     # set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag, costfactor, outputflag)
     sh, hp, fh, hw, b, m = set_SHEMS_parameters(h_start, h_end, h_predict, h_control, true, costfactor, outputflag);
@@ -62,7 +68,7 @@ function set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag
 end
 
 function write_to_results_file(all, m, date, run, costfactor=1)
-    CSV.write("results/$(date)_results_$(m.h_predict)_$(m.h_control)_$(m.h_start)-$(m.h_end)_$(run)_$(costfactor).csv", DataFrame(all),
+    CSV.write("single_building/results/$(date)_results_$(m.h_predict)_$(m.h_control)_$(m.h_start)-$(m.h_end)_$(run)_$(costfactor).csv", DataFrame(all),
         header=["Temp_FH", "Vol_HW", "Soc_B", "V_HW_plus", "V_HW_minus", "T_FH_plus", "T_FH_minus", "profits", "COP_FH", "COP_HW",
         "PV_DE", "B_DE", "GR_DE", "PV_B", "PV_GR", "PV_HP","GR_HP", "B_HP", "HP_FH", "HP_HW",
         "month", "day", "hour", "horizon"]);
