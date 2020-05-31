@@ -1,7 +1,7 @@
 include("main.jl");
-include("single_building/SHEMS_optimizer.jl");
-include("single_building/SHEMS_optimizer_seco.jl");
-include("single_building/SHEMS_optimizer_sesu.jl");
+include("SHEMS_optimizer.jl");
+include("SHEMS_optimizer_seco.jl");
+include("SHEMS_optimizer_sesu.jl");
 
 function yearly_SHEMS(h_start=1, h_end=8760, objective=1, case=1, costfactor=1.0, outputflag=true, bc_violations=79)
 
@@ -22,7 +22,7 @@ function yearly_SHEMS(h_start=1, h_end=8760, objective=1, case=1, costfactor=1.0
     return nothing
 end
 
-function roll_SHEMS(h_start, h_end, h_predict, h_control, costfactor=1.0, outputflag=false, case=1)
+function roll_SHEMS(h_start, h_end, h_predict, h_control, case=1, costfactor=1.0, outputflag=false)
 
     # Initialize technical setup__________________________________________________
     # set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag, costfactor, outputflag)
@@ -41,7 +41,7 @@ function roll_SHEMS(h_start, h_end, h_predict, h_control, costfactor=1.0, output
     end
 
     # write to results folder____________________________________________________
-    write_to_results_file(hcat(results, ones(size(results,1))*m.h_predict), m, objective=1, case, costfactor)
+    write_to_results_file(hcat(results, ones(size(results,1))*m.h_predict), m, 1, case, costfactor)
     return nothing
 end
 
@@ -71,9 +71,9 @@ function set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag
     return sh, hp, fh, hw, b, m
 end
 
-function write_to_results_file(results, m, objective=1, case=1)
+function write_to_results_file(results, m, objective=1, case=1, costfactor=1.0)
     date=200531;
-    CSV.write("single_building/results/$(date)_results_$(m.h_predict)_$(m.h_control)_$(m.h_start)-$(m.h_end)_$(objective)_$(case)_$(sh.costfactor).csv", DataFrame(all),
+    CSV.write("single_building/results/$(date)_results_$(m.h_predict)_$(m.h_control)_$(m.h_start)-$(m.h_end)_$(objective)_$(case)_$(costfactor).csv", DataFrame(results),
         header=["Temp_FH", "Vol_HW", "Soc_B", "V_HW_plus", "V_HW_minus", "T_FH_plus", "T_FH_minus", "profits", "COP_FH", "COP_HW",
         "PV_DE", "B_DE", "GR_DE", "PV_B", "PV_GR", "PV_HP","GR_HP", "B_HP", "HP_FH", "HP_HW",
         "month", "day", "hour", "horizon"]);
