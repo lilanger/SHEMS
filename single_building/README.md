@@ -5,8 +5,8 @@ Smart home energy management system of a single building with PV and a variable-
   <img src="pics\SHEMS_graph.png" width="600"/>
 </p>
 
-### Optimization models written in Julia JuMP
-3 different objective functions:
+## Optimization models written in Julia JuMP
+### 3 different objective functions:
 >1) Minimize net profits and comfort violations (base)
 >  ``SHEMS_optimizer.jl``
 >2) Maximize self-consumption
