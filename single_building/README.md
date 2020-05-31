@@ -24,7 +24,7 @@ Smart home energy management system of a single building with PV and a variable-
 ### 2 function for the different run modes
 >Run mode 1: Run the whole time interval in on optimization run     
 >``yearly_SHEMS(h_start=1, h_end=8760, objective=1, case=1, costfactor=1.0, outputflag=true, bc_violations=79)``   
->Run mode 2: Run the time interval in a rolling horizon approach     
+>Run mode 2: Run the time interval in a rolling horizon approach  (only cost-minimization)   
 >``roll_SHEMS(h_start, h_end, h_predict, h_control, case=1, costfactor=1.0, outputflag=false)``   
 
 ## How to run the model:
@@ -42,7 +42,7 @@ Run model with
   >``yearly_SHEMS(1, 8760, 1, 2)``   
   3) maximize self-sufficiency (objective 3), no battery (case 2), single run, 1-120h   
   >``yearly_SHEMS(1, 120, 3, 2)``    
-  3) no battery (case 2), rolling horizon run with prediction horizon 36h + control horizon 24h, whole year
+  3) cost minimization, no battery (case 2), rolling horizon run with prediction horizon 36h + control horizon 24h, whole year
   >``roll_SHEMS(1, 8760, 36, 24, 2)``    
  
 ## Results .csv files in the result folder follow the name convention  
