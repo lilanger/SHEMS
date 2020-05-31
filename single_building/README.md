@@ -36,8 +36,14 @@ Smart home energy management system of a single building with PV and a variable-
 
 ## Examples:
 Run model with 
-  1) cost minimization (base), both (base case), whole year   
+  1) cost minimization (base), both (base case), single run, whole year (1-8760h)   
   >``yearly_SHEMS()``   
-  2) cost minimization (base), no battery (case 2), whole year   
-  >``yearly_SHEMS()``   
+  2) cost minimization (base), no battery (case 2), single run, whole year (1-8760h)   
+  >``yearly_SHEMS(1, 8760, 1, 2)``   
+  3) maximize self-sufficiency (objective 3), no battery (case 2), single run, 1-120h   
+  >``yearly_SHEMS(1, 120, 3, 2)``    
+  3) no battery (case 2), rolling horizon run with prediction horizon 36h + control horizon 24h, whole year
+  >``roll_SHEMS(1, 8760, 36, 24, 2)``    
  
+## Results .csv files in the result folder follow the name convention  
+``$(date)_results_$(h_predict)_$(h_control)_$(h_start)-$(h_end)_$(objective)_$(case)_$(costfactor).csv``
