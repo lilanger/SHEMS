@@ -25,7 +25,7 @@ Smart home energy management system of a single building with PV and a variable-
 >Run mode 1: Run the whole time interval in on optimization run     
 >``yearly_SHEMS(h_start=1, h_end=8760, objective=1, case=1, costfactor=1.0, outputflag=true, bc_violations=79)``   
 >Run mode 2: Run the time interval in a rolling horizon approach     
->``roll_SHEMS(h_start, h_end, h_predict, h_control, costfactor=1.0, outputflag=false, case=1)``   
+>``roll_SHEMS(h_start, h_end, h_predict, h_control, case=1, costfactor=1.0, outputflag=false)``   
 
 ## How to run the model:
 1) Run the file ``run_SHEMS.jl``  
