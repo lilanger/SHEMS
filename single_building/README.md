@@ -7,7 +7,7 @@ Smart home energy management system of a single building with PV and a variable-
 
 ### Optimization models written in Julia JuMP
 3 different objective functions:
->1) Minimize net profits and comfort violations
+>1) Minimize net profits and comfort violations (base)
 >  ``SHEMS_optimizer.jl``
 >2) Maximize self-consumption
 > 	``SHEMS_optimizer_seco.jl``
@@ -23,14 +23,21 @@ Smart home energy management system of a single building with PV and a variable-
 
 ### 2 function for the different run modes
 >Run mode 1: Run the whole time interval in on optimization run     
->``yearly_SHEMS(h_start, h_end, objective, case, costfactor, outputflag, bc_violations)``   
+>``yearly_SHEMS(h_start=1, h_end=8760, objective=1, case=1, costfactor=1.0, outputflag=true, bc_violations=79)``   
 >Run mode 2: Run the time interval in a rolling horizon approach     
->``roll_SHEMS(h_start, h_end, h_predict, h_control, costfactor, outputflag, case)``   
+>``roll_SHEMS(h_start, h_end, h_predict, h_control, costfactor=1.0, outputflag=false, case=1)``   
 
 ## How to run the model:
-1) Run the .jl-file ``run_SHEMS.jl``  
+1) Run the file ``run_SHEMS.jl``  
 2) Choose the combination of:     
   >- objective function  
   >- technological configuration  
   >- run mode  
 
+## Examples:
+Run model with 
+  1) cost minimization (base), both (base case), whole year   
+  >``yearly_SHEMS()``   
+  2) cost minimization (base), no battery (case 2), whole year   
+  >``yearly_SHEMS()``   
+ 
