@@ -15,7 +15,7 @@ Smart home energy management system of a single building with PV and a variable-
 > 	``SHEMS_optimizer_sesu.jl``
   
   
-### 3 technological configuration cases:
+### 4 technological configuration cases:
 >Case 1 (base case)   
 >Case 2 (no battery)   
 >Case 3 (no compensation for grid feed-in)   
