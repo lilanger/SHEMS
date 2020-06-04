@@ -1,5 +1,8 @@
 # SHEMS
-Smart home energy management system of a single building with PV and a variable-speed air-source heat pump
+Smart home energy management system of a single building with PV and a variable-speed air-source heat pump  
+Explore the results interactively:   
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lilanger/SHEMS/master?filepath=https%3A%2F%2Fgithub.com%2Flilanger%2FSHEMS%2Fblob%2Fmaster%2Fsingle_building%2FSHEMS_visualization_Interactive_julia.ipynb)
+
 
 <p align="center">
   <img src="pics\SHEMS_graph.png" width="600"/>
