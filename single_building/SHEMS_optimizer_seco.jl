@@ -6,7 +6,7 @@ function SHEMS_optimizer_seco(sh, hp, fh, hw, b, m, bc_violations)
     c_water = 4.184;    #kJ/(kg*°C)
 
     # Input data__________________________________________________________________________________________________________________________________________________________
-    df = CSV.read("single_building/data/200124_datafile_all_details_right_timestamp.csv");
+    df = CSV.read("data/200124_datafile_all_details_right_timestamp.csv");
     h_last = sh.h_start + m.h_predict -1;                     # optimization horizon
 
     # all peers have the same demand
@@ -22,7 +22,8 @@ function SHEMS_optimizer_seco(sh, hp, fh, hw, b, m, bc_violations)
 
     # Model start________________________________________________________________________________________________________________________________________________________
     #Define Model und Solver and settings
-    model = Model(optimizer_with_attributes(() -> Gurobi.Optimizer(GUROBI_ENV)));
+    #model = Model(optimizer_with_attributes(() -> Gurobi.Optimizer(GUROBI_ENV)));
+    model = Model(optimizer_with_attributes(() -> Cbc.Optimizer()));
     set_optimizer_attribute(model, "MIPGap", m.mip_gap);
     set_optimizer_attribute(model, "Presolve", m.presolve_flag);
     set_optimizer_attribute(model, "OutputFlag", m.output_flag);

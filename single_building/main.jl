@@ -1,5 +1,7 @@
-using JuMP, Gurobi, CSV, DataFrames;
-GUROBI_ENV = Gurobi.Env() # Gurobi academic license message only once
+using JuMP, Cbc, CSV, DataFrames; 
+# for using the Gurobi solver (license needed)
+#using Gurobi
+#GUROBI_ENV = Gurobi.Env() # Gurobi academic license message only once
 
 struct HeatPump
     eta::Float32

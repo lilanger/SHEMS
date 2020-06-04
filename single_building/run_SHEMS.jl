@@ -26,7 +26,7 @@ function roll_SHEMS(h_start, h_end, h_predict, h_control, case=1, costfactor=1.0
 
     # Initialize technical setup__________________________________________________
     # set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag, costfactor, outputflag)
-    sh, hp, fh, hw, b, m = set_SHEMS_parameters(h_start, h_end, h_predict, h_control, true, costfactor, outputflag, case);
+    sh, hp, fh, hw, b, m = set_SHEMS_parameters(h_start, h_end, h_predict, h_control, true, costfactor, case, outputflag);
 
     # intitial run_______________________________________________________________
     sh.soc_b, sh.soc_fh, sh.soc_hw, results_new  = SHEMS_optimizer(sh, hp, fh, hw, b, m);
@@ -73,7 +73,7 @@ end
 
 function write_to_results_file(results, m, objective=1, case=1, costfactor=1.0)
     date=200531;
-    CSV.write("single_building/results/$(date)_results_$(m.h_predict)_$(m.h_control)_$(m.h_start)-$(m.h_end)_$(objective)_$(case)_$(costfactor).csv", DataFrame(results),
+    CSV.write("results/$(date)_results_$(m.h_predict)_$(m.h_control)_$(m.h_start)-$(m.h_end)_$(objective)_$(case)_$(costfactor).csv", DataFrame(results),
         header=["Temp_FH", "Vol_HW", "Soc_B", "V_HW_plus", "V_HW_minus", "T_FH_plus", "T_FH_minus", "profits", "COP_FH", "COP_HW",
         "PV_DE", "B_DE", "GR_DE", "PV_B", "PV_GR", "PV_HP","GR_HP", "B_HP", "HP_FH", "HP_HW",
         "month", "day", "hour", "horizon"]);
