@@ -3,7 +3,7 @@ include("SHEMS_optimizer.jl");
 include("SHEMS_optimizer_seco.jl");
 include("SHEMS_optimizer_sesu.jl");
 
-function yearly_SHEMS(h_start=1, h_end=8760, objective=1, case=1, costfactor=1.0, outputflag=true, bc_violations=79)
+function yearly_SHEMS(h_start=1, h_end=8760, objective=1, case=1, costfactor=1.0, outputflag=1, bc_violations=79)
 
     # Initialize technical setup according to case______________________
     # set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag, costfactor)
@@ -22,7 +22,7 @@ function yearly_SHEMS(h_start=1, h_end=8760, objective=1, case=1, costfactor=1.0
     return nothing
 end
 
-function roll_SHEMS(h_start, h_end, h_predict, h_control, case=1, costfactor=1.0, outputflag=false)
+function roll_SHEMS(h_start, h_end, h_predict, h_control, case=1, costfactor=1.0, outputflag=0)
 
     # Initialize technical setup__________________________________________________
     # set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag, costfactor, outputflag)
@@ -45,11 +45,11 @@ function roll_SHEMS(h_start, h_end, h_predict, h_control, case=1, costfactor=1.0
     return nothing
 end
 
-function set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag, case=1, costfactor=1.0, outputflag=false)
+function set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag, case=1, costfactor=1.0, outputflag=0)
 
     # Initialize technical setup________________________________________________
-    # Model_SHEMS(h_start, h_end, h_predict, h_control, big, rolling_flag, mip_gap, output_flag, presolve_flag)
-    m = Model_SHEMS(h_start, h_end,  h_predict, h_control, 60, rolling_flag, 0.005f0, outputflag, -1);
+    # Model_SHEMS(h_start, h_end, h_predict, h_control, big, rolling_flag, solver, mip_gap, output_flag, presolve_flag)
+    m = Model_SHEMS(h_start, h_end,  h_predict, h_control, 60, rolling_flag, "Gurobi", 0.005f0, outputflag, -1);
     hp = HeatPump(1.0f0, 3.0f0);    # HeatPump(eta, rate_max)
     fh = ThermalStorage(1.0f0, 10.0f0, 0.045f0, 30.0f0, 20.0f0, 22.0f0);    # ThermalStorage(eta, volume, loss, t_supply, soc_min, soc_max)
     hw = ThermalStorage(1.0f0, 180.0f0, 0.035f0, 45.0f0, 20.0f0, 180.0f0);  # ThermalStorage(eta, volume, loss, t_supply, soc_min, soc_max)

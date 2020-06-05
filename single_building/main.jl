@@ -1,4 +1,4 @@
-using JuMP, Cbc, CSV, DataFrames; 
+using JuMP, Cbc, CSV, DataFrames;
 # for using the Gurobi solver (license needed)
 #using Gurobi
 #GUROBI_ENV = Gurobi.Env() # Gurobi academic license message only once
@@ -42,6 +42,7 @@ struct Model_SHEMS
     h_control::Int16
     big::Int16
     rolling_flag::Bool
+    solver::String
     mip_gap::Float32
     output_flag::Bool
     presolve_flag::Int

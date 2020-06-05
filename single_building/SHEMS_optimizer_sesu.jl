@@ -22,11 +22,17 @@ function SHEMS_optimizer_sesu(sh, hp, fh, hw, b, m, bc_violations)
 
     # Model start________________________________________________________________________________________________________________________________________________________
     #Define Model und Solver and settings
-    #model = Model(optimizer_with_attributes(() -> Gurobi.Optimizer(GUROBI_ENV)));
-    model = Model(optimizer_with_attributes(() -> Cbc.Optimizer()));
-    set_optimizer_attribute(model, "MIPGap", m.mip_gap);
-    set_optimizer_attribute(model, "Presolve", m.presolve_flag);
-    set_optimizer_attribute(model, "OutputFlag", m.output_flag);
+    if m.solver == "Cbc"
+        model = Model(optimizer_with_attributes(() -> Cbc.Optimizer()));
+        set_optimizer_attribute(model, "ratioGap", m.mip_gap);
+        set_optimizer_attribute(model, "logLevel", m.output_flag);
+    elseif m.solver == "Gurobi"
+        model = Model(optimizer_with_attributes(() -> Gurobi.Optimizer(GUROBI_ENV)));
+        set_optimizer_attribute(model, "MIPGap", m.mip_gap);
+        set_optimizer_attribute(model, "Presolve", m.presolve_flag);
+        set_optimizer_attribute(model, "OutputFlag", m.output_flag);
+    end
+
 
     @variables(model, begin
         X[1:m.h_predict, 1:length(flows)] >= 0;    #1:PV_DE, 2:B_DE, 3:GR_DE, 4:PV_B, 5:PV_GR, 6:PV_HP, 7:GR_HP, 8:B_HP, 9:HP_FH, 10:HP_HW

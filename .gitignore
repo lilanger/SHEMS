@@ -1,0 +1,11 @@
+
+single_building/.ipynb_checkpoints/main-checkpoint.jl
+single_building/.ipynb_checkpoints/README-checkpoint.md
+single_building/.ipynb_checkpoints/run_SHEMS-checkpoint.jl
+single_building/.ipynb_checkpoints/SHEMS_optimizer-checkpoint.jl
+single_building/.ipynb_checkpoints/SHEMS_optimizer_seco-checkpoint.jl
+single_building/.ipynb_checkpoints/SHEMS_optimizer_sesu-checkpoint.jl
+single_building/.ipynb_checkpoints/SHEMS_visualization_Interactive_julia-checkpoint.ipynb
+single_building/.ipynb_checkpoints/SHEMS_visualization_output_python-checkpoint.ipynb
+*.lnk
+*.csv
