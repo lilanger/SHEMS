@@ -330,12 +330,6 @@ git-tree-sha1 = "34bfa994967e893ab2f17b864eec221b3521ba4d"
 uuid = "4d00f742-c7ba-57c2-abde-4428a4b178cb"
 version = "0.8.3"
 
-[[Gurobi]]
-deps = ["Libdl", "LinearAlgebra", "MathOptInterface", "MathProgBase", "SparseArrays"]
-git-tree-sha1 = "f36a2fa62909675681aec582ccfc4a4a629406e4"
-uuid = "2e9cd046-0924-5485-92f1-d5272153d98b"
-version = "0.8.1"
-
 [[HTTP]]
 deps = ["Base64", "Dates", "IniFile", "MbedTLS", "Sockets"]
 git-tree-sha1 = "ec87d5e2acbe1693789efbbe14f5ea7525758f71"
@@ -476,12 +470,6 @@ deps = ["BenchmarkTools", "CodecBzip2", "CodecZlib", "JSON", "JSONSchema", "Line
 git-tree-sha1 = "cd2049c055c7d192a235670d50faa375361624ba"
 uuid = "b8f27783-ece8-5eb3-8dc8-9495eed66fee"
 version = "0.9.14"
-
-[[MathProgBase]]
-deps = ["LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "9abbe463a1e9fc507f12a69e7f29346c2cdc472c"
-uuid = "fdba3010-5040-5b88-9595-932c9decdf73"
-version = "0.7.8"
 
 [[MbedTLS]]
 deps = ["Dates", "MbedTLS_jll", "Random", "Sockets"]
