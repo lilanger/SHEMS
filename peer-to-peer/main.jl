@@ -1,53 +1,48 @@
-using JuMP, Gurobi, CSV, DataFrames;
-GUROBI_ENV = Gurobi.Env() # Gurobi solver message only once
+using JuMP, Cbc, CSV, DataFrames;
+# for using the Gurobi solver (license needed)
+using Gurobi
+GUROBI_ENV = Gurobi.Env() # Gurobi academic license message only once
 
 struct HeatPump
-    eta::Float64
-    rate_max::Float64
+    rate_max::Float32
 end
 
 struct ThermalStorage
-    eta::Float64
-    vol::Float64
-    loss::Float64
-    t_supply::Float64
-    soc_min::Float64
-    soc_max::Float64
+    volume::Float32
+    loss::Float32
+    t_supply::Float32
+    soc_min::Float32
+    soc_max::Float32
 end
 
 struct Battery
-    eta::Float64
-    soc_min::Float64
-    soc_max::Float64
-    rate_max::Float64
-    loss::Float64
-end
-
-struct PeerMarket
-    eta::Float64
-    p_buy::Float64
-    p_sell::Float64
-    p_peer::Float64
+    eta::Float32
+    soc_min::Float32
+    soc_max::Float32
+    rate_max::Float32
+    loss::Float32
 end
 
 mutable struct SHEMS
-    n_peers::Int
-    h_start::Int
-    h_end::Int
-    h_predict::Int
-    h_control::Int
-    soc_b::AbstractArray
-    soc_fh::AbstractArray
-    soc_hw::AbstractArray
+    n_peers::Int16
+    costfactor::Float32
+    p_buy::Float32
+    p_sell::Float32
+    p_peer::Float32
+    soc_b::Array{Float32,1}
+    soc_fh::Array{Float32,1}
+    soc_hw::Array{Float32,1}
+    h_start::Int16
 end
 
 struct Model_SHEMS
-    mip_gap::Float64
+    h_start::Int16
+    h_end::Int16
+    h_predict::Int16
+    h_control::Int16
+    big::Int16
+    solver::String
+    mip_gap::Float32
     output_flag::Bool
-    presolve_flag::Bool
-end
-
-function COPcalc(ts::ThermalStorage, t_outside)
-    #Calculate coefficients of performance for every time period (1:h_predict)___________________________________________
-    return cop = max.((5.8*ones(size(t_outside,1))) -(1. /14) * abs.((ts.t_supply*ones(size(t_outside,1))) -t_outside), 0);
+    presolve_flag::Int
 end
