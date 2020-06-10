@@ -48,4 +48,4 @@ Run model with
   >``roll_SHEMS(1, 8760, 36, 24, 2)``    
  
 ## Results .csv files in the result folder follow the name convention  
-``$(date)_results_$(h_predict)_$(h_control)_$(h_start)-$(h_end)_$(objective)_$(case)_$(costfactor).csv``
+``results_$(h_predict)_$(h_control)_$(h_start)-$(h_end)_$(objective)_$(case)_$(costfactor).csv``
