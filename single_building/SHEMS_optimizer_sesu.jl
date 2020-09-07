@@ -66,7 +66,7 @@ function SHEMS_optimizer_sesu(sh, hp, fh, hw, b, m, bc_violations)
     # Battery__________________________________________________________________________
     @constraints(model, begin
         [h=1:m.h_predict-1],   SOC_b[h+1] == ((1 -b.loss) *SOC_b[h])+
-                                    (b.eta *X[h,4]) -sum((1/(b.eta)) *X[h,i] for i=[2,8]);  # State of Charge, loss for unique solutions
+                                    (b.eta *X[h,4]) -sum((1.0/(b.eta)) *X[h,i] for i=[2,8]);  # State of Charge, loss for unique solutions
         [h=1:m.h_predict],     b.soc_min <= SOC_b[h] <= b.soc_max;                          # Limits Battery usable capacity
         [h=1:m.h_predict],     X[h,4] <= B_switch[h]*b.rate_max;                              # Either charging
         [h=1:m.h_predict],     sum(X[h,i] for i=[2,8]) <= (1-B_switch[h])*b.rate_max;         # or discharging
