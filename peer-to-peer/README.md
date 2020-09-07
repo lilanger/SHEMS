@@ -15,15 +15,15 @@ Explore the results interactively:   [![Binder](https://mybinder.org/badge_logo.
 ## How to run the model:
 1) Run the file ``run_SHEMS.jl``  
 2) Choose the combination of:     
-  >- ''time horizons''
-  >- ''# of peers''
-  >- ''tariff case''
+  >- time horizons
+  >- # of peers
+  >- tariff case
   using function roll_SHEMS(market_flag, n_peers, n_market, h_start, h_end, h_predict, h_control, case)
 
 ## Examples:
 Run model with 
   1) whole year (1-8760h), prediction horizon 36h, control horizon 12h, 3 peers, case 1 (current regime, with FiT)
-  >``roll_SHEMS(1, 3, 1, 1, 8760, 36, 12, 1)''
+  >``roll_SHEMS(1, 3, 1, 1, 8760, 36, 12, 1)``
   2) cost minimization (base), no battery (case 2), single run, whole year (1-8760h)   
   >``yearly_SHEMS(1, 8760, 1, 2)``   
   3) maximize self-sufficiency (objective 3), no battery (case 2), single run, 1-120h   
