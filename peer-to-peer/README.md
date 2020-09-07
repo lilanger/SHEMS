@@ -15,9 +15,10 @@ Explore the results interactively:   [![Binder](https://mybinder.org/badge_logo.
 ## How to run the model:
 1) Run the file ``run_SHEMS.jl``  
 2) Choose the combination of:     
-  >- time horizons
-  >- # of peers
-  >- tariff case
+  - time horizons
+  - number  of peers
+  - tariff case
+  
   using function roll_SHEMS(market_flag, n_peers, n_market, h_start, h_end, h_predict, h_control, case)
 
 ## Examples:
