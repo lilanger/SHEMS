@@ -23,14 +23,9 @@ Explore the results interactively:   [![Binder](https://mybinder.org/badge_logo.
 
 ## Examples:
 Run model with 
-  1) whole year (1-8760h), prediction horizon 36h, control horizon 12h, 3 peers, case 1 (current regime, with FiT)
+  - whole year (1-8760h), prediction horizon 36h, control horizon 12h, 3 peers, case 1 (current regime, with FiT)
   >``roll_SHEMS(1, 3, 1, 1, 8760, 36, 12, 1)``
-  2) cost minimization (base), no battery (case 2), single run, whole year (1-8760h)   
-  >``yearly_SHEMS(1, 8760, 1, 2)``   
-  3) maximize self-sufficiency (objective 3), no battery (case 2), single run, 1-120h   
-  >``yearly_SHEMS(1, 120, 3, 2)``    
-  3) cost minimization, no battery (case 2), rolling horizon run with prediction horizon 36h + control horizon 24h, whole year
-  >``roll_SHEMS(1, 8760, 36, 24, 2)``    
+
  
 ## Results .csv files in the result folder follow the name convention  
-``$(date)_results_$(h_predict)_$(h_control)_$(h_start)-$(h_end)_$(objective)_$(case)_$(costfactor).csv``
+``$(date)_results_$(h_predict)_$(h_control)_$(h_start)-$(h_end)_$(market_flag)_$(n_peers)_$(case).csv``
