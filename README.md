@@ -1,2 +1,2 @@
 # SHEMS
-Smart home energy management system with PV and a variable-speed air-source heat pump
+Smart home energy management systems considering modulating heat pumps and photovaltaic systems
