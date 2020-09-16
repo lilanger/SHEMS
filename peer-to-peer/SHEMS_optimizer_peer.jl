@@ -43,7 +43,7 @@ function SHEMS_optimizer_peer(sh, pv, hp, fh, hw, b, m, p)
         T_fh_plus[1:m.h_predict, 1:sh.n_peers*sh.n_market] >= 0; T_fh_minus[1:m.h_predict, 1:sh.n_peers*sh.n_market] >= 0;
         V_hw_plus[1:m.h_predict, 1:sh.n_peers*sh.n_market] >= 0; V_hw_minus[1:m.h_predict, 1:sh.n_peers*sh.n_market] >= 0;
         HP_switch[1:m.h_predict, 1:sh.n_peers*sh.n_market], Bin;
-        Hot[1:m.h_predict], Bin;
+        Hot[1:m.h_predict, 1:sh.n_peers*sh.n_market], Bin;
         Peer_switch[1:m.h_predict, 1:sh.n_peers*sh.n_market], Bin;
     end)
 
@@ -73,7 +73,7 @@ function SHEMS_optimizer_peer(sh, pv, hp, fh, hw, b, m, p)
                     fix.(SOC_b[:, (4*sh.n_market)+1:(5*sh.n_market)], 0; force=true);
                     fix.(X[:, [1,2,4,5,6,8,11,12], (4*sh.n_market)+1:(5*sh.n_market)], 0; force=true);  # 1:PV_DE, 2:B_DE, 4:PV_B, 5:PV_GR, 6:PV_HP, 8:B_HP, 11:PV_PM, 12:B_PM
                 end
-                
+
             end
         end
     end
@@ -118,9 +118,9 @@ function SHEMS_optimizer_peer(sh, pv, hp, fh, hw, b, m, p)
         [h=1:m.h_predict-1, n=1:sh.n_peers*sh.n_market],    T_fh[h+1,n] == T_fh[h,n]+
                                                                 (60*60)/(p_concr *fh.volume *c_concr)*
                                                                 ((cop_fh[h] *X[h,9,n]) -d_fh[h]-
-                                                                ((1-Hot[h]) *fh.loss) +(Hot[h] *fh.loss));       # SoC floor heating (temperature)
-        [h=1:m.h_predict, n=1:sh.n_peers*sh.n_market],      T_fh[h,n] -((1 -Hot[h])*m.big) <= t_outside[h];      # force hot binary on if hotter outside than inside
-        [h=1:m.h_predict, n=1:sh.n_peers*sh.n_market],      t_outside[h] -(Hot[h]*m.big) <= T_fh[h,n];
+                                                                ((1-Hot[h,n]) *fh.loss) +(Hot[h,n] *fh.loss));       # SoC floor heating (temperature)
+        [h=1:m.h_predict, n=1:sh.n_peers*sh.n_market],      T_fh[h,n] -((1 -Hot[h,n])*m.big) <= t_outside[h];      # force hot binary on if hotter outside than inside
+        [h=1:m.h_predict, n=1:sh.n_peers*sh.n_market],      t_outside[h] -(Hot[h,n]*m.big) <= T_fh[h,n];
         [h=1:m.h_predict, n=1:sh.n_peers*sh.n_market],      T_fh[h,n] <= fh.soc_max +T_fh_plus[h,n];                # Limits temperature FH max
         [h=1:m.h_predict, n=1:sh.n_peers*sh.n_market],      fh.soc_min -T_fh_minus[h,n] <= T_fh[h,n];               # Limits temperature FH min
     end)
