@@ -58,7 +58,7 @@ function set_SHEMS_parameters(market_flag, n_peers, n_market, h_start, h_end, h_
 end
 
 function write_to_results_file(results, m, market_flag=1, n_peers=3, n_market=1, case=1)
-    date=200829;
+    date=200916;
     CSV.write("results/$(date)_results_$(m.h_predict)_$(m.h_control)_$(m.h_start)-$(m.h_end)"*
                 "_$(market_flag)_$(n_peers)_$(n_market)_$(case).csv",
             DataFrame(results), header=["Temp_FH", "Vol_HW",
@@ -86,20 +86,3 @@ function run_cases(start_n, stop_n, start_c, stop_c)
     end
     return nothing
 end
-
-
-
-#=
-function touPrices(h_predict, h_control, p_buy)
-    # Calculate the purchase market price TOU: off-peak=p_buy, other= p_buy*2
-    TOU = ((mod.(1:(h_predict +h_control+1).-1,24).> 6).+1) *p_buy
-    return TOU;
-end
-
-function peerPrices(proBuy, p_buy, p_sell)
-    # Calculate reservation purchase price and reservation sales price
-    p_peer= (1-proBuy)*((1 - 0.1)/(1 + 0.05)) .* p_buy .+
-            proBuy*(((1 + 0.1)/(1 - 0.05)) * p_sell);
-    return p_peer
-end
-=#
