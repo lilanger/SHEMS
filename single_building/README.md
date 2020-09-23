@@ -4,7 +4,7 @@ Explore the results interactively:   [![Binder](https://mybinder.org/badge_logo.
 
 
 <p align="center">
-  <img src="pics\SHEMS_graph.png" width="600"/>
+  <img src="pics\SHEMS_graph.png" width="400"/>
 </p>
 
 ## Optimization models written in Julia JuMP
