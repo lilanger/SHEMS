@@ -37,7 +37,7 @@ Explore the results interactively:   [![Binder](https://mybinder.org/badge_logo.
   >- technological configuration  
   >- run mode  
 
-## Examples:
+### Examples:
 Run model with 
   1) cost minimization (base), both (base case), single run, whole year (1-8760h)   
   >``yearly_SHEMS()``   
@@ -48,5 +48,5 @@ Run model with
   3) cost minimization, no battery (case 2), rolling horizon run with prediction horizon 36h + control horizon 24h, whole year
   >``roll_SHEMS(1, 8760, 36, 24, 2)``    
  
-## Results .csv files in the result folder follow the name convention  
+### Results .csv files in the result folder follow the name convention  
 ``results_$(h_predict)_$(h_control)_$(h_start)-$(h_end)_$(objective)_$(case)_$(costfactor).csv``
