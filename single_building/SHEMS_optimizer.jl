@@ -1,4 +1,4 @@
-function SHEMS_optimizer(sh, hp, fh, hw, b, m)
+function SHEMS_optimizer(sh, hp, fh, hw, b, m, pv)
     flows = [:PV_DE, :B_DE, :GR_DE, :PV_B, :PV_GR, :PV_HP, :GR_HP, :B_HP, :HP_FH, :HP_HW];
     p_concr = 2400.0;   #kg/m^3
     c_concr = 1.0;      #kJ/(kg*°C)
@@ -6,7 +6,7 @@ function SHEMS_optimizer(sh, hp, fh, hw, b, m)
     c_water = 4.184;    #kJ/(kg*°C)
 
     # Input data__________________________________________________________________________________________________________________________________________________________
-    df = CSV.read("data/200124_datafile_all_details_right_timestamp.csv");
+    df = CSV.read("single_building/data/$(m.season)_$(m.run)_$(m.price).csv", DataFrame, header=true);
     h_last = sh.h_start + m.h_predict-1;                     # optimization horizon
 
     # read input data
@@ -45,33 +45,33 @@ function SHEMS_optimizer(sh, hp, fh, hw, b, m)
     end)
 
     # Fix start SoCs
-    fix.(SOC_b[1], sh.soc_b; force=true);
+    fix.(SOC_b[1], sh.SOC_b; force=true);
     fix.(T_fh[1],sh.T_fh; force=true);
-    fix.(V_hw[1],sh.soc_hw; force=true);
+    fix.(V_hw[1],sh.V_hw; force=true);
 
     #1:PV_DE, 2:B_DE, 3:GR_DE, 4:PV_B, 5:PV_GR, 6:PV_HP, 7:GR_HP, 8:B_HP, 9:HP_FH, 10:HP_HW
     # Objective function: maximize profit, minimize comfort violations_____________________________________________________________________
     @objective(model, Max, sum((sh.p_sell *X[h,5])-
-        sum(sh.p_buy *X[h,i] for i=[3,7])-
-        (sh.costfactor *(T_fh_plus[h] +T_fh_minus[h] +V_hw_plus[h] +V_hw_minus[h])) for h=1:m.h_predict));
+        sum(sh.p_buy * X[h,i] for i=[3,7])-
+        (sh.costfactor * (T_fh_plus[h] + T_fh_minus[h] + V_hw_plus[h] + V_hw_minus[h])) for h=1:m.h_predict));
 
     # Electricity demand, generation_________________________________
     @constraints(model, begin
         [h=1:m.h_predict],     sum(X[h,i] for i in 1:3) == d_e[h];                          # fulfill energy demand
-        [h=1:m.h_predict],     sum(X[h,i] for i=[1,4,5,6]) == g_e[h];                       # restricted by PV generation
+        [h=1:m.h_predict],     sum(X[h,i] for i=[1,4,5,6]) == g_e[h] * pv.eta;                       # restricted by PV generation
     end)
     # Battery__________________________________________________________________________
     @constraints(model, begin
-        [h=1:m.h_predict],     SOC_b[h+1] == ((1 -b.loss) *SOC_b[h])+
-                                    (b.eta *X[h,4]) -sum((1.0/(b.eta)) *X[h,i] for i=[2,8]);  # State of Charge, loss for unique solutions
+        [h=1:m.h_predict],     SOC_b[h+1] == ((1 -b.loss) * SOC_b[h])+
+                                    (b.eta * X[h,4]) -sum((1.0/(b.eta)) * X[h,i] for i=[2,8]);  # State of Charge, loss for unique solutions
         [h=1:m.h_predict],     b.soc_min <= SOC_b[h] <= b.soc_max;                          # Limits Battery usable capacity
         [h=1:m.h_predict],     sum(X[h,i] for i=[2,4,8]) <= b.rate_max;                     # limit discharging/charging to nominal power (never at same time)
     end)
     # Heat pump_______________________________________________________________________________
     @constraints(model, begin
         [h=1:m.h_predict],     sum(X[h,i] for i in 9:10) == sum(X[h,i] for i in 6:8);       # level power heat pump=and out
-        [h=1:m.h_predict],     X[h,9] == Mod_fh[h] *hp.rate_max;                            # heating energy FH max cap
-        [h=1:m.h_predict],     X[h,10] == Mod_hw[h] *hp.rate_max;                           # heating energy HW max cap
+        [h=1:m.h_predict],     X[h,9] == Mod_fh[h] * hp.rate_max;                            # heating energy FH max cap
+        [h=1:m.h_predict],     X[h,10] == Mod_hw[h] * hp.rate_max;                           # heating energy HW max cap
         [h=1:m.h_predict],     Mod_fh[h] <= 1 -HP_switch[h];                                # switch FH or HW
         [h=1:m.h_predict],     Mod_hw[h] <= HP_switch[h];                                   # switch HW or FH
     end)
@@ -104,7 +104,7 @@ function SHEMS_optimizer(sh, hp, fh, hw, b, m)
                     JuMP.value.(T_fh_plus[1:m.h_control]), JuMP.value.(T_fh_minus[1:m.h_control]),
                     profits, cop_fh[1:m.h_control], cop_hw[1:m.h_control],
                     JuMP.value.(X[1:m.h_control, :]),                                               # flow variables
-                    Matrix(df[sh.h_start:(sh.h_start + m.h_control -1), 13:15]));                   # month + day + hour
+                    Matrix(df[sh.h_start:(sh.h_start + m.h_control -1), 6:8]));                   # month + day + hour
 
     if m.rolling_flag==1
         return JuMP.value.(SOC_b[m.h_control+1]), JuMP.value.(T_fh[m.h_control+1]), JuMP.value.(V_hw[m.h_control+1]), results
