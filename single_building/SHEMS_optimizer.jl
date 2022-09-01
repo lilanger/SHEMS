@@ -6,7 +6,7 @@ function SHEMS_optimizer(sh, hp, fh, hw, b, m)
     c_water = 4.184;    #kJ/(kg*°C)
 
     # Input data__________________________________________________________________________________________________________________________________________________________
-    df = CSV.read("data/200124_datafile_all_details_right_timestamp.csv");
+    df = CSV.read("data/200124_datafile_all_details_right_timestamp.csv",DataFrame);
     h_last = sh.h_start + m.h_predict-1;                     # optimization horizon
 
     # read input data
