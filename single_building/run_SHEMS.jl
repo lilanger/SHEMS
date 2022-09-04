@@ -72,7 +72,7 @@ function set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag
         b = Battery(0.95f0, 0.0f0, 13.5f0, 3.3f0, 0.00003f0);
         # set p_sell to zero for no feedin tariff
         sh = SHEMS(costfactor, 0.3f0, 0.0f0, 13.5f0, 22.0f0, 180.0f0, h_start);
-    elseif case==3 # no battery and no grid feed-in compensation
+    elseif case==4 # no battery and no grid feed-in compensation
         # Battery(eta, soc_min, soc_max, rate_max, loss)
         b = Battery(0.95f0, 0.0f0, 0.0f0, 0.0f0, 0.00003f0);
         # set p_sell to zero for no feedin tariff
