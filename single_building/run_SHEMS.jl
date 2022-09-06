@@ -54,7 +54,7 @@ function set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag
                                 season="all", run="all", price="fix")
     # Initialize technical setup________________________________________________
     # Model_SHEMS(h_start, h_end, h_predict, h_control, big, rolling_flag, solver, mip_gap, output_flag, presolve_flag)
-    m = Model_SHEMS(h_start, h_end, h_predict, h_control, 60, rolling_flag, "Gurobi", 0.005f0, outputflag, -1,
+    m = Model_SHEMS(h_start, h_end, h_predict, h_control, 60, rolling_flag, "Cbc", 0.05f0, outputflag, -1,
                         season, run, price);
     # PV(eta)
     pv = PV(0.95f0);
@@ -111,7 +111,7 @@ function write_to_results_file(results, m, objective=1, case=1, costfactor=1.0)
     date=211116;
     CSV.write("single_building/results/$(date)_results_$(m.h_predict)_$(m.h_control)_$(m.h_start)-$(m.h_end)"*
                 "_$(objective)_$(case)_$(costfactor)_$(m.season)_$(m.run)_$(m.price).csv",
-                DataFrame(results, :auto), header=["Temp_FH", "Vol_HW",
+                DataFrame(results), header=["Temp_FH", "Vol_HW",
                 "Soc_B", "V_HW_plus", "V_HW_minus", "T_FH_plus", "T_FH_minus", "profits", "COP_FH",
                 "COP_HW","PV_DE", "B_DE", "GR_DE", "PV_B", "PV_GR", "PV_HP","GR_HP", "B_HP", "HP_FH", "HP_HW",
                 "month", "day", "hour", "horizon"]);
@@ -128,7 +128,7 @@ end
 #=
 # Calling model runs:
 yearly_SHEMS(1, 1, 5, 1.0, 1, season="all", run="eval", price="fix")
-yearly_SHEMS(1, 1, 5, 1.0, 0, run="test")
+yearly_SHEMS(1, 1, 5, 1.0, 1, run="test")
 yearly_SHEMS(1, 1, 5, 1.0, 1, season="summer", run="eval", price="fix")
 yearly_SHEMS(1, 1, 5, 1.0, 1, season="winter", run="eval", price="fix")
 =#
