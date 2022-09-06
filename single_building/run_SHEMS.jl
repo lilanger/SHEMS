@@ -9,7 +9,7 @@ function yearly_SHEMS(h_start=1, objective=1, case=1, costfactor=1.0, outputflag
     # Initialize technical setup according to case______________________
     # set_SHEMS_parameters(h_start, h_end, h_predict, h_control, rolling_flag, costfactor)
     sh, hp, fh, hw, b, m, pv = set_SHEMS_parameters(h_start, H_LENGTH[season, run], (H_LENGTH[season, run]-h_start)+1,
-                                                (H_LENGTH[season, run]-h_start)+1,
+                                                    (H_LENGTH[season, run]-h_start)+1,
                                                     false, case, costfactor, outputflag,
                                                     season=season, run=run, price=price);
 
@@ -132,3 +132,4 @@ yearly_SHEMS(1, 1, 5, 1.0, 0, run="test")
 yearly_SHEMS(1, 1, 5, 1.0, 1, season="summer", run="eval", price="fix")
 yearly_SHEMS(1, 1, 5, 1.0, 1, season="winter", run="eval", price="fix")
 =#
+
